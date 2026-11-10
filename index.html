@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>月相雙視角實驗室 v1.3</title>
+  <title>月相雙視角實驗室 v1.5 (台灣觀測解析版)</title>
   <style>
     :root {
       --bg-outer: #040711;
@@ -17,6 +17,7 @@
       --yellow-dark: #ca8a04;
       --cyan-main: #38bdf8;
       --cyan-glow: rgba(56, 189, 248, 0.35);
+      --purple-main: #c084fc;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
@@ -37,14 +38,14 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       padding: 10px 12px;
       overflow-x: hidden;
     }
 
     .app-container {
       width: 100%;
-      max-width: 1260px;
+      max-width: 1280px;
       background: linear-gradient(180deg, #0d1527 0%, #090e1a 100%);
       border: 1.5px solid #1e2d4a;
       border-radius: 18px;
@@ -85,7 +86,7 @@
     }
 
     .app-title {
-      font-size: 1.38rem;
+      font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: 0.5px;
       background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
@@ -124,9 +125,9 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 800;
-      padding: 5px 12px;
+      padding: 5px 11px;
       border-radius: 7px;
       cursor: pointer;
       transition: all 0.18s ease;
@@ -136,10 +137,7 @@
       gap: 5px;
     }
 
-    .btn-mode:hover {
-      color: #e2e8f0;
-    }
-
+    .btn-mode:hover { color: #e2e8f0; }
     .btn-mode.active {
       background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
       color: #ffffff;
@@ -150,9 +148,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 7px 13px;
+      padding: 6px 12px;
       border-radius: 9px;
-      font-size: 0.86rem;
+      font-size: 0.84rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.18s ease;
@@ -201,67 +199,144 @@
       color: #fff;
     }
 
-    /* Main Dual View Grid */
-    .views-grid {
+    /* Perspective Selector Toolbar */
+    .view-selector-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #070d1a;
+      border: 1px solid #1e2d4a;
+      border-radius: 10px;
+      padding: 7px 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .selector-presets {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .selector-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-right: 4px;
+    }
+
+    .btn-view-preset {
+      background: #101b33;
+      border: 1px solid #22355b;
+      color: #cbd5e1;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .btn-view-preset:hover {
+      border-color: #38bdf8;
+      color: #fff;
+    }
+
+    .btn-view-preset.active {
+      background: rgba(56, 189, 248, 0.22);
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    .selector-toggles {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-view-toggle {
+      background: transparent;
+      border: 1px solid #253759;
+      color: #64748b;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .btn-view-toggle.active {
+      background: #172545;
+      border-color: #60a5fa;
+      color: #93c5fd;
+    }
+
+    /* Views Layout Container */
+    .views-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .views-top-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
+    }
+
+    .views-top-row.single-col {
+      grid-template-columns: 1fr;
+    }
+
+    .views-bottom-row {
+      width: 100%;
     }
 
     .view-card {
       background: #0b1324;
       border: 1px solid #1e2d4a;
       border-radius: 14px;
-      padding: 12px 14px 14px;
+      padding: 11px 13px 13px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
     }
 
     .view-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .view-title-a {
-      color: #60a5fa;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .view-title-a { color: #60a5fa; display: flex; align-items: center; gap: 6px; }
+    .view-title-b { color: #facc15; display: flex; align-items: center; gap: 6px; }
+    .view-title-c { color: #c084fc; display: flex; align-items: center; gap: 6px; }
 
-    .view-title-b {
-      color: #facc15;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .view-sub-a {
-      font-size: 0.82rem;
-      color: #fde047;
-      font-weight: 600;
-    }
-
-    .view-sub-b {
-      font-size: 0.84rem;
-      color: #94a3b8;
-      font-weight: 600;
-    }
+    .view-sub-a { font-size: 0.8rem; color: #fde047; font-weight: 600; }
+    .view-sub-b { font-size: 0.82rem; color: #94a3b8; font-weight: 600; }
+    .view-sub-c { font-size: 0.82rem; color: #cbd5e1; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 
     .canvas-box {
       position: relative;
       background: var(--bg-canvas);
       border: 1px solid #17223b;
       border-radius: 10px;
-      height: 340px;
+      height: 330px;
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+
+    .canvas-box-c {
+      height: 290px;
     }
 
     .canvas-box svg {
@@ -282,7 +357,7 @@
       border: 1px solid rgba(250, 204, 21, 0.55);
       border-radius: 8px;
       padding: 5px 11px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
       z-index: 6;
@@ -290,14 +365,8 @@
       font-family: inherit;
     }
 
-    .canvas-overlay-btn:hover {
-      background: rgba(250, 204, 21, 0.15);
-    }
-
-    .canvas-overlay-btn.off {
-      color: #94a3b8;
-      border-color: #334155;
-    }
+    .canvas-overlay-btn:hover { background: rgba(250, 204, 21, 0.15); }
+    .canvas-overlay-btn.off { color: #94a3b8; border-color: #334155; }
 
     .space-overlays-left {
       position: absolute;
@@ -314,23 +383,44 @@
       color: #94a3b8;
       border: 1px solid #334155;
       border-radius: 8px;
-      padding: 4px 10px;
-      font-size: 0.78rem;
+      padding: 4px 9px;
+      font-size: 0.76rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.15s ease;
       font-family: inherit;
     }
 
-    .chip-toggle-btn:hover {
-      border-color: #38bdf8;
-      color: #e2e8f0;
-    }
-
+    .chip-toggle-btn:hover { border-color: #38bdf8; color: #e2e8f0; }
     .chip-toggle-btn.active {
       background: rgba(14, 116, 144, 0.35);
       color: #38bdf8;
       border-color: rgba(56, 189, 248, 0.65);
+    }
+
+    /* Special Taiwan Explanation Button in View C */
+    .btn-taiwan-info {
+      background: linear-gradient(135deg, rgba(88, 28, 135, 0.45) 0%, rgba(30, 58, 138, 0.5) 100%);
+      color: #e9d5ff;
+      border: 1.2px solid #a855f7;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.77rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.18s ease;
+      font-family: inherit;
+      box-shadow: 0 0 8px rgba(168, 85, 247, 0.25);
+    }
+
+    .btn-taiwan-info:hover {
+      background: linear-gradient(135deg, rgba(126, 34, 206, 0.65) 0%, rgba(37, 99, 235, 0.65) 100%);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.45);
     }
 
     /* 3D Moon Canvas inside View B SVG foreignObject */
@@ -373,13 +463,13 @@
       border: 1px solid rgba(250, 204, 21, 0.55);
       color: #fde047;
       font-weight: 800;
-      font-size: 0.98rem;
-      padding: 5px 13px;
+      font-size: 0.96rem;
+      padding: 5px 12px;
       border-radius: 8px;
     }
 
     .phase-name-text {
-      font-size: 1.2rem;
+      font-size: 1.18rem;
       font-weight: 800;
       color: #ffffff;
       letter-spacing: 0.5px;
@@ -389,9 +479,9 @@
       background: rgba(30, 58, 138, 0.4);
       border: 1px solid rgba(56, 189, 248, 0.35);
       color: #38bdf8;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 700;
-      padding: 4px 12px;
+      padding: 4px 11px;
       border-radius: 8px;
     }
 
@@ -399,16 +489,12 @@
       display: flex;
       align-items: center;
       gap: 16px;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       color: #cbd5e1;
       flex-wrap: wrap;
     }
 
-    .status-meta-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
+    .status-meta-item { display: flex; align-items: center; gap: 5px; }
 
     /* Junior High Science Secondary Info Strip (Rise/Set +50m, Tide, Eclipse) */
     .status-row-science {
@@ -428,7 +514,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      font-size: 0.83rem;
+      font-size: 0.82rem;
     }
 
     .sci-label {
@@ -440,22 +526,34 @@
       white-space: nowrap;
     }
 
-    .sci-value {
-      color: #e2e8f0;
-      font-weight: 800;
-      text-align: right;
+    .sci-value { color: #e2e8f0; font-weight: 800; text-align: right; }
+    .sci-value.highlight-yellow { color: #fde047; }
+    .sci-value.highlight-cyan { color: #38bdf8; }
+    .sci-value.highlight-rose { color: #fb7185; }
+
+    /* View C Specific Toolbar & Range Controls */
+    .view-c-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .sci-value.highlight-yellow {
-      color: #fde047;
+    .view-c-slider-box {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid #233454;
+      border-radius: 7px;
+      padding: 2px 8px;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: #cbd5e1;
     }
 
-    .sci-value.highlight-cyan {
-      color: #38bdf8;
-    }
-
-    .sci-value.highlight-rose {
-      color: #fb7185;
+    .view-c-time-slider {
+      width: 100px;
+      cursor: pointer;
     }
 
     /* Bottom Controls Bar */
@@ -492,14 +590,8 @@
       font-family: inherit;
     }
 
-    .btn-play:hover {
-      background: var(--yellow-bright);
-    }
-
-    .btn-play.playing {
-      background: #ef4444;
-      color: #fff;
-    }
+    .btn-play:hover { background: var(--yellow-bright); }
+    .btn-play.playing { background: #ef4444; color: #fff; }
 
     .btn-step {
       background: #17223b;
@@ -515,10 +607,7 @@
       font-family: inherit;
     }
 
-    .btn-step:hover {
-      background: #1e2d4a;
-      border-color: #475569;
-    }
+    .btn-step:hover { background: #1e2d4a; border-color: #475569; }
 
     .slider-track-box {
       flex: 1;
@@ -613,9 +702,7 @@
       padding: 16px;
     }
 
-    .modal-backdrop.open {
-      display: flex;
-    }
+    .modal-backdrop.open { display: flex; }
 
     .modal-card {
       background: #0f172a;
@@ -661,10 +748,7 @@
       font-weight: bold;
     }
 
-    .modal-close:hover {
-      background: #334155;
-      color: #fff;
-    }
+    .modal-close:hover { background: #334155; color: #fff; }
 
     .mnemonic-grid {
       display: grid;
@@ -684,15 +768,44 @@
       gap: 9px;
     }
 
-    .mnemonic-box h3 {
-      color: #38bdf8;
-      font-size: 1.02rem;
+    .mnemonic-box h3 { color: #38bdf8; font-size: 1.02rem; }
+    .mnemonic-box p { color: #cbd5e1; font-size: 0.88rem; line-height: 1.55; }
+
+    /* Taiwan Point Box in Modal */
+    .point-box {
+      background: #070d1a;
+      border: 1px solid #233454;
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    .mnemonic-box p {
+    .point-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .point-desc {
       color: #cbd5e1;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .formula-tag {
+      display: inline-block;
+      background: rgba(14, 116, 144, 0.25);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #7dd3fc;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: monospace;
       font-size: 0.88rem;
-      line-height: 1.55;
     }
 
     .notes-table {
@@ -709,15 +822,8 @@
       text-align: left;
     }
 
-    .notes-table th {
-      background: #131c31;
-      color: #38bdf8;
-      font-weight: 800;
-    }
-
-    .notes-table tr:nth-child(even) {
-      background: rgba(15, 23, 42, 0.55);
-    }
+    .notes-table th { background: #131c31; color: #38bdf8; font-weight: 800; }
+    .notes-table tr:nth-child(even) { background: rgba(15, 23, 42, 0.55); }
 
     .quiz-option {
       background: #131c31;
@@ -750,9 +856,19 @@
       color: #fca5a5;
     }
 
-    @media (max-width: 920px) {
-      .views-grid {
-        grid-template-columns: 1fr;
+    /* Orbiting Sky Points in View C */
+    .sky-moon-point {
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .sky-moon-point:hover {
+      transform: scale(1.22);
+    }
+
+    @media (max-width: 940px) {
+      .views-top-row {
+        grid-template-columns: 1fr !important;
       }
       .status-row-science {
         grid-template-columns: 1fr;
@@ -773,7 +889,7 @@
       <div class="header-left">
         <div class="logo-moon"></div>
         <h1 class="app-title">月相雙視角實驗室</h1>
-        <span class="sync-badge">同屏同步互動版 v1.3</span>
+        <span class="sync-badge">台灣觀測解析版 v1.5</span>
       </div>
       <div class="header-actions">
         <!-- 2D / 3D Switcher -->
@@ -788,324 +904,420 @@
       </div>
     </header>
 
-    <!-- Dual Perspectives -->
-    <main class="views-grid">
-      <!-- View A: Outer Space Top-Down / 3D Oblique -->
-      <section class="view-card">
-        <div class="view-header">
-          <div class="view-title-a" id="viewATitle">🔭 視角 A：外太空俯視 (北極上空)</div>
-          <div class="view-sub-a">☀️ 陽光由右射入</div>
-        </div>
-        <div class="canvas-box" id="spaceCanvasBox">
-          <!-- Interactive Science Overlays in View A -->
-          <div class="space-overlays-left">
-            <button class="chip-toggle-btn active" id="btnToggleTide" title="顯示月球與太陽引潮力造成的海水漲落分布">🌊 潮汐分布：開</button>
-            <button class="chip-toggle-btn" id="btnToggleShadow" title="顯示地球與月球的本影錐（觀察日食與月食成因）">🌑 日月食本影：關</button>
-            <button class="chip-toggle-btn" id="btnToggleTilt" style="display: none;">📐 視角：3D 斜角</button>
+    <!-- Perspective Selector Toolbar (A, B, C Switcher) -->
+    <div class="view-selector-bar">
+      <div class="selector-presets">
+        <span class="selector-label">🎛️ 視角排版：</span>
+        <button class="btn-view-preset active" data-preset="AB" id="btnPresetAB">預設 [A+B]</button>
+        <button class="btn-view-preset" data-preset="AC" id="btnPresetAC">時空對照 [A+C]</button>
+        <button class="btn-view-preset" data-preset="ABC" id="btnPresetABC">三視角 [A+B+C]</button>
+      </div>
+      <div class="selector-toggles">
+        <span class="selector-label">自訂開關：</span>
+        <button class="btn-view-toggle active" data-view="A" id="btnToggleViewA">🔭 視角A</button>
+        <button class="btn-view-toggle active" data-view="B" id="btnToggleViewB">👀 視角B</button>
+        <button class="btn-view-toggle" data-view="C" id="btnToggleViewC">🌌 視角C(天空圖)</button>
+      </div>
+    </div>
+
+    <!-- Views Container -->
+    <main class="views-container" id="viewsContainer">
+      <!-- Upper Row: View A and View B -->
+      <div class="views-top-row" id="viewsTopRow">
+        <!-- View A: Outer Space Top-Down / 3D Oblique -->
+        <section class="view-card" id="cardViewA">
+          <div class="view-header">
+            <div class="view-title-a" id="viewATitle">🔭 視角 A：外太空俯視 (北極上空)</div>
+            <div class="view-sub-a">☀️ 陽光由右射入</div>
           </div>
+          <div class="canvas-box" id="spaceCanvasBox">
+            <!-- Interactive Science Overlays in View A -->
+            <div class="space-overlays-left">
+              <button class="chip-toggle-btn active" id="btnToggleTide" title="顯示月球與太陽引潮力造成的海水漲落分布">🌊 潮汐分布：開</button>
+              <button class="chip-toggle-btn" id="btnToggleShadow" title="顯示地球與月球的本影錐（觀察日食與月食成因）">🌑 日月食本影：關</button>
+              <button class="chip-toggle-btn" id="btnToggleTilt" style="display: none;">📐 視角：3D 斜角</button>
+            </div>
 
-          <svg id="spaceSvg" viewBox="0 0 560 340" preserveAspectRatio="xMidYMid meet">
-            <defs>
-              <!-- Sunlight right glow -->
-              <linearGradient id="sunGlow" x1="1" y1="0" x2="0" y2="0">
-                <stop offset="0%" stop-color="#facc15" stop-opacity="0.32" />
-                <stop offset="45%" stop-color="#facc15" stop-opacity="0.08" />
-                <stop offset="100%" stop-color="#facc15" stop-opacity="0" />
-              </linearGradient>
+            <svg id="spaceSvg" viewBox="0 0 560 330" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient id="sunGlow" x1="1" y1="0" x2="0" y2="0">
+                  <stop offset="0%" stop-color="#facc15" stop-opacity="0.32" />
+                  <stop offset="45%" stop-color="#facc15" stop-opacity="0.08" />
+                  <stop offset="100%" stop-color="#facc15" stop-opacity="0" />
+                </linearGradient>
 
-              <!-- 3D Earth Lit Ocean Gradient -->
-              <radialGradient id="earth3dOcean" cx="68%" cy="38%" r="65%">
-                <stop offset="0%" stop-color="#7dd3fc" />
-                <stop offset="45%" stop-color="#0284c7" />
-                <stop offset="85%" stop-color="#0369a1" />
-                <stop offset="100%" stop-color="#082f49" />
-              </radialGradient>
+                <radialGradient id="earth3dOcean" cx="68%" cy="38%" r="65%">
+                  <stop offset="0%" stop-color="#7dd3fc" />
+                  <stop offset="45%" stop-color="#0284c7" />
+                  <stop offset="85%" stop-color="#0369a1" />
+                  <stop offset="100%" stop-color="#082f49" />
+                </radialGradient>
 
-              <!-- 3D Earth Night Shadow Overlay (Sun on right) -->
-              <linearGradient id="earth3dShadow" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#020617" stop-opacity="0.93" />
-                <stop offset="44%" stop-color="#020617" stop-opacity="0.86" />
-                <stop offset="54%" stop-color="#020617" stop-opacity="0.15" />
-                <stop offset="68%" stop-color="#020617" stop-opacity="0" />
-                <stop offset="100%" stop-color="#fde047" stop-opacity="0.12" />
-              </linearGradient>
+                <linearGradient id="earth3dShadow" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#020617" stop-opacity="0.93" />
+                  <stop offset="44%" stop-color="#020617" stop-opacity="0.86" />
+                  <stop offset="54%" stop-color="#020617" stop-opacity="0.15" />
+                  <stop offset="68%" stop-color="#020617" stop-opacity="0" />
+                  <stop offset="100%" stop-color="#fde047" stop-opacity="0.12" />
+                </linearGradient>
 
-              <!-- 3D Earth Atmosphere Glow -->
-              <filter id="earthGlowFilter" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
+                <filter id="earthGlowFilter" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
 
-              <clipPath id="earthClip3D">
-                <circle cx="0" cy="0" r="30" />
-              </clipPath>
-
-              <!-- 3D Moon Lit Sphere Gradient -->
-              <radialGradient id="moon3dLitGrad" cx="72%" cy="38%" r="65%">
-                <stop offset="0%" stop-color="#fef9c3" />
-                <stop offset="45%" stop-color="#facc15" />
-                <stop offset="85%" stop-color="#ca8a04" />
-                <stop offset="100%" stop-color="#713f12" />
-              </radialGradient>
-
-              <!-- 3D Moon Shadow Overlay -->
-              <linearGradient id="moon3dShadowGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#090d16" stop-opacity="0.95" />
-                <stop offset="45%" stop-color="#090d16" stop-opacity="0.88" />
-                <stop offset="56%" stop-color="#090d16" stop-opacity="0.12" />
-                <stop offset="70%" stop-color="#090d16" stop-opacity="0" />
-              </linearGradient>
-
-              <clipPath id="moonClip3D">
-                <circle cx="0" cy="0" r="16.5" />
-              </clipPath>
-
-              <marker id="sunArrow" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1 L 8 5 L 0 9 z" fill="#eab308" />
-              </marker>
-            </defs>
-
-            <!-- Background Stars -->
-            <g opacity="0.45" fill="#94a3b8">
-              <circle cx="45" cy="50" r="1" />
-              <circle cx="95" cy="120" r="1.3" />
-              <circle cx="60" cy="260" r="1" />
-              <circle cx="420" cy="45" r="1.2" />
-              <circle cx="390" cy="290" r="1" />
-              <circle cx="150" cy="40" r="1.2" />
-              <circle cx="205" cy="295" r="1.1" />
-              <circle cx="330" cy="35" r="1" />
-            </g>
-
-            <!-- Right Sunlight Band & Arrows -->
-            <rect x="475" y="0" width="85" height="340" fill="url(#sunGlow)" />
-            <g stroke="#eab308" stroke-width="1.6" opacity="0.85">
-              <line x1="550" y1="55" x2="508" y2="55" marker-end="url(#sunArrow)" />
-              <line x1="550" y1="112" x2="508" y2="112" marker-end="url(#sunArrow)" />
-              <line x1="550" y1="170" x2="508" y2="170" marker-end="url(#sunArrow)" />
-              <line x1="550" y1="228" x2="508" y2="228" marker-end="url(#sunArrow)" />
-              <line x1="550" y1="285" x2="508" y2="285" marker-end="url(#sunArrow)" />
-            </g>
-
-            <!-- Eclipse Umbra Shadow Cones (toggled via btnToggleShadow) -->
-            <g id="umbraShadowGroup" style="display: none;">
-              <!-- Earth Umbra Cone pointing left (away from Sun) -->
-              <polygon points="250,137 250,193 95,180 95,150" fill="rgba(2, 6, 23, 0.78)" stroke="rgba(148, 163, 184, 0.28)" stroke-width="1" stroke-dasharray="3,3" />
-              <!-- Moon Umbra Cone pointing left -->
-              <polygon id="moonUmbraPoly" points="355,150 355,180 250,165" fill="rgba(2, 6, 23, 0.82)" stroke="rgba(250, 204, 21, 0.3)" stroke-width="0.9" stroke-dasharray="2,2" />
-            </g>
-
-            <!-- Orbit Dashed Ellipse (Center: 250, 165) -->
-            <ellipse id="orbitRing" cx="250" cy="165" rx="105" ry="105" fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5" />
-
-            <!-- Orbit Cardinal Labels -->
-            <text id="labelDay8" x="250" y="44" fill="#94a3b8" font-size="13" font-weight="700" text-anchor="middle">初八(上弦・小潮)</text>
-            <text id="labelDay15" x="122" y="170" fill="#94a3b8" font-size="13" font-weight="700" text-anchor="end">十五(望・大潮)</text>
-            <text id="labelDay23" x="250" y="294" fill="#94a3b8" font-size="13" font-weight="700" text-anchor="middle">廿三(下弦・小潮)</text>
-            <text id="labelDay1" x="372" y="170" fill="#94a3b8" font-size="13" font-weight="700" text-anchor="start">初一(朔・大潮)</text>
-
-            <!-- Dynamic layer container so Moon can pass behind or in front of Earth in 3D tilted view -->
-            <g id="sceneLayerRoot">
-              <!-- Sightline from Earth observer to Moon -->
-              <line id="sightLine" x1="250" y1="165" x2="355" y2="165" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="3,3" opacity="0.75" />
-
-              <!-- Earth Group (Center: 250, 165) -->
-              <g id="earthGroup" transform="translate(250, 165)">
-                <!-- Tidal Bulge Halo around Earth (引潮力海水分布) -->
-                <g id="tidalBulgeGroup">
-                  <!-- Solar tide component (fixed horizontal) -->
-                  <ellipse cx="0" cy="0" rx="34" ry="30" fill="rgba(56, 189, 248, 0.12)" />
-                  <!-- Combined Lunar + Solar Tidal Bulge rotated toward Moon -->
-                  <ellipse
-                    id="lunarTideEllipse"
-                    cx="0"
-                    cy="0"
-                    rx="44"
-                    ry="31"
-                    fill="rgba(56, 189, 248, 0.26)"
-                    stroke="#38bdf8"
-                    stroke-width="1.2"
-                    stroke-dasharray="3,2"
-                  />
-                </g>
-
-                <!-- 2D Earth Representation -->
-                <g id="earth2DNode">
-                  <path d="M 0 -28 A 28 28 0 0 0 0 28 Z" fill="#0f2942" />
-                  <path d="M 0 -28 A 28 28 0 0 1 0 28 Z" fill="#38bdf8" />
-                  <circle cx="0" cy="0" r="28" fill="none" stroke="#475569" stroke-width="1.5" />
-                  <!-- Counter-clockwise rotation indicator in 2D -->
-                  <path d="M -6 -10 A 12 12 0 1 0 8 -8" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.2" />
-                </g>
-
-                <!-- 3D Earth Representation -->
-                <g id="earth3DNode" style="display: none;">
-                  <!-- Outer atmosphere halo -->
-                  <circle cx="0" cy="0" r="31.5" fill="none" stroke="#38bdf8" stroke-width="2.5" opacity="0.4" filter="url(#earthGlowFilter)" />
-                  <g clip-path="url(#earthClip3D)">
-                    <!-- 3D Ocean Sphere -->
-                    <circle cx="0" cy="0" r="30" fill="url(#earth3dOcean)" />
-                    <!-- Continents & Polar Ice -->
-                    <g id="earthContinents" fill="#22c55e" opacity="0.78">
-                      <path d="M -8 -22 C 2 -24, 14 -16, 18 -6 C 21 2, 12 12, 4 8 C -2 4, -12 -10, -8 -22 Z" />
-                      <path d="M 6 12 C 14 14, 22 20, 16 26 C 10 29, 2 22, 6 12 Z" />
-                      <path d="M -24 -8 C -16 -12, -10 -4, -14 6 C -18 16, -26 12, -24 -8 Z" fill="#16a34a" />
-                      <!-- North/South polar cap hints -->
-                      <ellipse cx="0" cy="-28" rx="14" ry="3.5" fill="#f8fafc" opacity="0.75" />
-                      <ellipse cx="0" cy="28" rx="14" ry="3.5" fill="#f8fafc" opacity="0.65" />
-                    </g>
-                    <!-- Subtle Clouds -->
-                    <g fill="#ffffff" opacity="0.35">
-                      <ellipse cx="10" cy="-10" rx="11" ry="3" transform="rotate(-18 10 -10)" />
-                      <ellipse cx="-6" cy="8" rx="13" ry="3.5" transform="rotate(12 -6 8)" />
-                    </g>
-                    <!-- 3D Spherical Terminator Shadow (Night on Left, Sun on Right) -->
-                    <rect x="-32" y="-32" width="64" height="64" fill="url(#earth3dShadow)" />
-                    <!-- Night-side city lights twinkle -->
-                    <g fill="#fde047" opacity="0.55">
-                      <circle cx="-14" cy="-6" r="0.9" />
-                      <circle cx="-18" cy="-3" r="0.7" />
-                      <circle cx="-12" cy="8" r="0.8" />
-                      <circle cx="-20" cy="11" r="0.7" />
-                    </g>
-                  </g>
-                  <circle cx="0" cy="0" r="30" fill="none" stroke="#7dd3fc" stroke-width="0.9" opacity="0.55" />
-                </g>
-              </g>
-
-              <!-- Observer red dot on Earth rim facing Moon -->
-              <circle id="observerDot" cx="277" cy="165" r="4.5" fill="#f43f5e" stroke="#fff" stroke-width="1" />
-
-              <!-- Draggable Orbiting Moon Group -->
-              <g id="orbitMoonGroup" transform="translate(355, 165)" style="cursor: grab;">
-                <!-- Enlarged invisible hit area for touch/mouse dragging -->
-                <circle cx="0" cy="0" r="30" fill="transparent" />
-
-                <!-- 2D Moon Representation -->
-                <g id="moon2DNode">
-                  <circle cx="0" cy="0" r="16.5" fill="none" stroke="#facc15" stroke-width="1.5" opacity="0.65" />
-                  <path d="M 0 -15 A 15 15 0 0 0 0 15 Z" fill="#1e293b" />
-                  <path d="M 0 -15 A 15 15 0 0 1 0 15 Z" fill="#facc15" />
-                  <circle cx="0" cy="0" r="15" fill="none" stroke="#eab308" stroke-width="1.2" />
-                </g>
-
-                <!-- 3D Moon Representation -->
-                <g id="moon3DNode" style="display: none;">
-                  <circle cx="0" cy="0" r="18.5" fill="none" stroke="#fde047" stroke-width="1.5" opacity="0.45" />
-                  <g clip-path="url(#moonClip3D)">
-                    <circle cx="0" cy="0" r="16.5" fill="url(#moon3dLitGrad)" />
-                    <!-- 3D Moon Crater Details -->
-                    <g fill="#a16207" opacity="0.38">
-                      <circle cx="5" cy="-5" r="4" />
-                      <circle cx="9" cy="4" r="3.2" />
-                      <circle cx="-4" cy="-7" r="3.5" />
-                      <circle cx="-7" cy="5" r="4.5" />
-                    </g>
-                    <!-- 3D Spherical Shadow on Left Side -->
-                    <rect x="-18" y="-18" width="36" height="36" fill="url(#moon3dShadowGrad)" />
-                  </g>
-                  <circle cx="0" cy="0" r="16.5" fill="none" stroke="#facc15" stroke-width="1" opacity="0.75" />
-                </g>
-              </g>
-            </g>
-
-            <!-- Bottom hint caption -->
-            <text x="250" y="324" fill="#94a3b8" font-size="12" font-weight="600" text-anchor="middle">
-              👆 直接拖曳月球逆時針公轉（地球自轉與月球公轉皆為逆時針）
-            </text>
-          </svg>
-        </div>
-      </section>
-
-      <!-- View B: Looking Up from Earth -->
-      <section class="view-card">
-        <div class="view-header">
-          <div class="view-title-b" id="viewBTitle">👀 視角 B：地球抬頭看</div>
-          <div class="view-sub-b" id="litPercentTop">亮面 0%</div>
-        </div>
-        <div class="canvas-box">
-          <button class="canvas-overlay-btn" id="btnToggleDC">✋ D/C輔助：開</button>
-
-          <svg id="earthViewSvg" viewBox="0 0 560 340" preserveAspectRatio="xMidYMid meet">
-            <!-- Starry Sky Background -->
-            <g opacity="0.5" fill="#94a3b8">
-              <circle cx="80" cy="60" r="1.2" />
-              <circle cx="115" cy="110" r="1" />
-              <circle cx="95" cy="240" r="1.4" />
-              <circle cx="445" cy="85" r="1.1" />
-              <circle cx="470" cy="215" r="1.3" />
-              <circle cx="410" cy="275" r="1" />
-              <circle cx="165" cy="50" r="1" />
-            </g>
-
-            <!-- Cardinal Directions -->
-            <text x="280" y="34" fill="#64748b" font-size="13" font-weight="700" text-anchor="middle">南(頭頂中天)</text>
-            <text x="36" y="170" fill="#64748b" font-size="13" font-weight="700" text-anchor="start">東(左)</text>
-            <text x="524" y="170" fill="#64748b" font-size="13" font-weight="700" text-anchor="end">西(右)</text>
-
-            <!-- Moon Base Disc (Center: 280, 158, R: 96) -->
-            <g id="moonDiscGroup" transform="translate(280, 158)">
-              <!-- 3D Raycast Spherical Moon inside SVG coordinate space -->
-              <foreignObject id="moon3dForeignObj" x="-110" y="-110" width="220" height="220" style="display: none;">
-                <canvas xmlns="http://www.w3.org/1999/xhtml" id="moon3dCanvas" width="220" height="220"></canvas>
-              </foreignObject>
-
-              <!-- 2D Moon Layers -->
-              <g id="viewBMoon2DLayers">
-                <!-- Dark base circle -->
-                <circle cx="0" cy="0" r="96" fill="#111827" stroke="#1e293b" stroke-width="2" />
-
-                <!-- Subtle Lunar Maria (craters) on dark disc -->
-                <g fill="#1e293b" opacity="0.55">
-                  <circle cx="-28" cy="-22" r="22" />
-                  <circle cx="10" cy="-32" r="16" />
-                  <circle cx="-15" cy="18" r="26" />
-                  <circle cx="28" cy="12" r="18" />
-                  <circle cx="-48" cy="10" r="14" />
-                </g>
-
-                <!-- Illuminated yellow phase path -->
-                <path id="moonPhasePath" d="" fill="#facc15" />
-
-                <!-- Subtle Lunar Maria overlay on lit part (clipped to lit phase) -->
-                <clipPath id="litClip">
-                  <path id="moonClipPath" d="" />
+                <clipPath id="earthClip3D">
+                  <circle cx="0" cy="0" r="30" />
                 </clipPath>
-                <g clip-path="url(#litClip)" fill="#eab308" opacity="0.35">
-                  <circle cx="-28" cy="-22" r="22" />
-                  <circle cx="10" cy="-32" r="16" />
-                  <circle cx="-15" cy="18" r="26" />
-                  <circle cx="28" cy="12" r="18" />
-                  <circle cx="-48" cy="10" r="14" />
+
+                <radialGradient id="moon3dLitGrad" cx="72%" cy="38%" r="65%">
+                  <stop offset="0%" stop-color="#fef9c3" />
+                  <stop offset="45%" stop-color="#facc15" />
+                  <stop offset="85%" stop-color="#ca8a04" />
+                  <stop offset="100%" stop-color="#713f12" />
+                </radialGradient>
+
+                <linearGradient id="moon3dShadowGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#090d16" stop-opacity="0.95" />
+                  <stop offset="45%" stop-color="#090d16" stop-opacity="0.88" />
+                  <stop offset="56%" stop-color="#090d16" stop-opacity="0.12" />
+                  <stop offset="70%" stop-color="#090d16" stop-opacity="0" />
+                </linearGradient>
+
+                <clipPath id="moonClip3D">
+                  <circle cx="0" cy="0" r="16.5" />
+                </clipPath>
+
+                <marker id="sunArrow" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#eab308" />
+                </marker>
+              </defs>
+
+              <!-- Background Stars -->
+              <g opacity="0.45" fill="#94a3b8">
+                <circle cx="45" cy="50" r="1" />
+                <circle cx="95" cy="120" r="1.3" />
+                <circle cx="60" cy="260" r="1" />
+                <circle cx="420" cy="45" r="1.2" />
+                <circle cx="390" cy="290" r="1" />
+                <circle cx="150" cy="40" r="1.2" />
+                <circle cx="205" cy="295" r="1.1" />
+                <circle cx="330" cy="35" r="1" />
+              </g>
+
+              <!-- Right Sunlight Band & Arrows -->
+              <rect x="475" y="0" width="85" height="330" fill="url(#sunGlow)" />
+              <g stroke="#eab308" stroke-width="1.6" opacity="0.85">
+                <line x1="550" y1="55" x2="508" y2="55" marker-end="url(#sunArrow)" />
+                <line x1="550" y1="112" x2="508" y2="112" marker-end="url(#sunArrow)" />
+                <line x1="550" y1="165" x2="508" y2="165" marker-end="url(#sunArrow)" />
+                <line x1="550" y1="220" x2="508" y2="220" marker-end="url(#sunArrow)" />
+                <line x1="550" y1="275" x2="508" y2="275" marker-end="url(#sunArrow)" />
+              </g>
+
+              <!-- Eclipse Umbra Shadow Cones -->
+              <g id="umbraShadowGroup" style="display: none;">
+                <polygon points="250,137 250,193 95,180 95,150" fill="rgba(2, 6, 23, 0.78)" stroke="rgba(148, 163, 184, 0.28)" stroke-width="1" stroke-dasharray="3,3" />
+                <polygon id="moonUmbraPoly" points="355,150 355,180 250,165" fill="rgba(2, 6, 23, 0.82)" stroke="rgba(250, 204, 21, 0.3)" stroke-width="0.9" stroke-dasharray="2,2" />
+              </g>
+
+              <!-- Orbit Dashed Ellipse (Center: 250, 165) -->
+              <ellipse id="orbitRing" cx="250" cy="165" rx="105" ry="105" fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5" />
+
+              <!-- Orbit Cardinal Labels -->
+              <text id="labelDay8" x="250" y="44" fill="#94a3b8" font-size="12" font-weight="700" text-anchor="middle">初八(上弦・小潮)</text>
+              <text id="labelDay15" x="122" y="170" fill="#94a3b8" font-size="12" font-weight="700" text-anchor="end">十五(望・大潮)</text>
+              <text id="labelDay23" x="250" y="294" fill="#94a3b8" font-size="12" font-weight="700" text-anchor="middle">廿三(下弦・小潮)</text>
+              <text id="labelDay1" x="372" y="170" fill="#94a3b8" font-size="12" font-weight="700" text-anchor="start">初一(朔・大潮)</text>
+
+              <!-- Dynamic layer container so Moon can pass behind or in front of Earth in 3D tilted view -->
+              <g id="sceneLayerRoot">
+                <!-- Sightline from Earth observer to Moon -->
+                <line id="sightLine" x1="250" y1="165" x2="355" y2="165" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="3,3" opacity="0.75" />
+
+                <!-- Earth Group (Center: 250, 165) -->
+                <g id="earthGroup" transform="translate(250, 165)">
+                  <!-- Tidal Bulge Halo around Earth -->
+                  <g id="tidalBulgeGroup">
+                    <ellipse cx="0" cy="0" rx="34" ry="30" fill="rgba(56, 189, 248, 0.12)" />
+                    <ellipse
+                      id="lunarTideEllipse"
+                      cx="0"
+                      cy="0"
+                      rx="44"
+                      ry="31"
+                      fill="rgba(56, 189, 248, 0.26)"
+                      stroke="#38bdf8"
+                      stroke-width="1.2"
+                      stroke-dasharray="3,2"
+                    />
+                  </g>
+
+                  <!-- 2D Earth Representation -->
+                  <g id="earth2DNode">
+                    <path d="M 0 -28 A 28 28 0 0 0 0 28 Z" fill="#0f2942" />
+                    <path d="M 0 -28 A 28 28 0 0 1 0 28 Z" fill="#38bdf8" />
+                    <circle cx="0" cy="0" r="28" fill="none" stroke="#475569" stroke-width="1.5" />
+                    <path d="M -6 -10 A 12 12 0 1 0 8 -8" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.2" />
+                  </g>
+
+                  <!-- 3D Earth Representation -->
+                  <g id="earth3DNode" style="display: none;">
+                    <circle cx="0" cy="0" r="31.5" fill="none" stroke="#38bdf8" stroke-width="2.5" opacity="0.4" filter="url(#earthGlowFilter)" />
+                    <g clip-path="url(#earthClip3D)">
+                      <circle cx="0" cy="0" r="30" fill="url(#earth3dOcean)" />
+                      <g id="earthContinents" fill="#22c55e" opacity="0.78">
+                        <path d="M -8 -22 C 2 -24, 14 -16, 18 -6 C 21 2, 12 12, 4 8 C -2 4, -12 -10, -8 -22 Z" />
+                        <path d="M 6 12 C 14 14, 22 20, 16 26 C 10 29, 2 22, 6 12 Z" />
+                        <path d="M -24 -8 C -16 -12, -10 -4, -14 6 C -18 16, -26 12, -24 -8 Z" fill="#16a34a" />
+                        <ellipse cx="0" cy="-28" rx="14" ry="3.5" fill="#f8fafc" opacity="0.75" />
+                        <ellipse cx="0" cy="28" rx="14" ry="3.5" fill="#f8fafc" opacity="0.65" />
+                      </g>
+                      <g fill="#ffffff" opacity="0.35">
+                        <ellipse cx="10" cy="-10" rx="11" ry="3" transform="rotate(-18 10 -10)" />
+                        <ellipse cx="-6" cy="8" rx="13" ry="3.5" transform="rotate(12 -6 8)" />
+                      </g>
+                      <rect x="-32" y="-32" width="64" height="64" fill="url(#earth3dShadow)" />
+                      <g fill="#fde047" opacity="0.55">
+                        <circle cx="-14" cy="-6" r="0.9" />
+                        <circle cx="-18" cy="-3" r="0.7" />
+                        <circle cx="-12" cy="8" r="0.8" />
+                        <circle cx="-20" cy="11" r="0.7" />
+                      </g>
+                    </g>
+                    <circle cx="0" cy="0" r="30" fill="none" stroke="#7dd3fc" stroke-width="0.9" opacity="0.55" />
+                  </g>
+
+                  <!-- Observer Horizon Line -->
+                  <g id="observerHorizonGroup" transform="rotate(0)">
+                    <line x1="28" y1="-28" x2="28" y2="28" stroke="rgba(56, 189, 248, 0.45)" stroke-width="1.2" stroke-dasharray="3,2" />
+                    <circle cx="28" cy="0" r="4.5" fill="#f43f5e" stroke="#fff" stroke-width="1.2" />
+                  </g>
+                </g>
+
+                <!-- Draggable Orbiting Moon Group -->
+                <g id="orbitMoonGroup" transform="translate(355, 165)" style="cursor: grab;">
+                  <circle cx="0" cy="0" r="30" fill="transparent" />
+
+                  <!-- 2D Moon Representation -->
+                  <g id="moon2DNode">
+                    <circle cx="0" cy="0" r="16.5" fill="none" stroke="#facc15" stroke-width="1.5" opacity="0.65" />
+                    <path d="M 0 -15 A 15 15 0 0 0 0 15 Z" fill="#1e293b" />
+                    <path d="M 0 -15 A 15 15 0 0 1 0 15 Z" fill="#facc15" />
+                    <circle cx="0" cy="0" r="15" fill="none" stroke="#eab308" stroke-width="1.2" />
+                  </g>
+
+                  <!-- 3D Moon Representation -->
+                  <g id="moon3DNode" style="display: none;">
+                    <circle cx="0" cy="0" r="18.5" fill="none" stroke="#fde047" stroke-width="1.5" opacity="0.45" />
+                    <g clip-path="url(#moonClip3D)">
+                      <circle cx="0" cy="0" r="16.5" fill="url(#moon3dLitGrad)" />
+                      <g fill="#a16207" opacity="0.38">
+                        <circle cx="5" cy="-5" r="4" />
+                        <circle cx="9" cy="4" r="3.2" />
+                        <circle cx="-4" cy="-7" r="3.5" />
+                        <circle cx="-7" cy="5" r="4.5" />
+                      </g>
+                      <rect x="-18" y="-18" width="36" height="36" fill="url(#moon3dShadowGrad)" />
+                    </g>
+                    <circle cx="0" cy="0" r="16.5" fill="none" stroke="#facc15" stroke-width="1" opacity="0.75" />
+                  </g>
                 </g>
               </g>
 
-              <!-- D / C Cyan Dashed Helper Overlay -->
-              <path
-                id="dcArcPath"
-                d="M 0 -100 L 0 100 A 100 100 0 0 0 0 -100"
-                fill="none"
-                stroke="#38bdf8"
-                stroke-width="3.2"
-                stroke-dasharray="6,5"
-              />
-            </g>
+              <!-- Bottom hint caption -->
+              <text x="250" y="316" fill="#94a3b8" font-size="11.5" font-weight="600" text-anchor="middle">
+                👆 直接拖曳月球逆時針公轉（紅點為地球觀測者，隨觀測時刻自轉）
+              </text>
+            </svg>
+          </div>
+        </section>
 
-            <!-- D/C Helper Caption Below Moon -->
-            <text id="dcCaptionText" x="280" y="286" fill="#38bdf8" font-size="14.5" font-weight="800" text-anchor="middle">
-              🌑 初一新月：月球暗面朝向地球
-            </text>
+        <!-- View B: Looking Up from Earth -->
+        <section class="view-card" id="cardViewB">
+          <div class="view-header">
+            <div class="view-title-b" id="viewBTitle">👀 視角 B：地球抬頭看</div>
+            <div class="view-sub-b" id="litPercentTop">亮面 0%</div>
+          </div>
+          <div class="canvas-box">
+            <button class="canvas-overlay-btn" id="btnToggleDC">✋ D/C輔助：開</button>
 
-            <!-- Bottom Horizon Orientation Caption -->
-            <text x="280" y="318" fill="#94a3b8" font-size="12.5" font-weight="600" text-anchor="middle">
-              東(左) ◀ 面向南方夜空仰望（同步自轉：永遠同一面朝地球） ▶ 西(右)
-            </text>
-          </svg>
-        </div>
-      </section>
+            <svg id="earthViewSvg" viewBox="0 0 560 330" preserveAspectRatio="xMidYMid meet">
+              <!-- Starry Sky Background -->
+              <g opacity="0.5" fill="#94a3b8">
+                <circle cx="80" cy="60" r="1.2" />
+                <circle cx="115" cy="110" r="1" />
+                <circle cx="95" cy="240" r="1.4" />
+                <circle cx="445" cy="85" r="1.1" />
+                <circle cx="470" cy="215" r="1.3" />
+                <circle cx="410" cy="275" r="1" />
+                <circle cx="165" cy="50" r="1" />
+              </g>
+
+              <!-- Cardinal Directions -->
+              <text x="280" y="32" fill="#64748b" font-size="13" font-weight="700" text-anchor="middle">南(頭頂中天)</text>
+              <text x="36" y="165" fill="#64748b" font-size="13" font-weight="700" text-anchor="start">東(左)</text>
+              <text x="524" y="165" fill="#64748b" font-size="13" font-weight="700" text-anchor="end">西(右)</text>
+
+              <!-- Moon Base Disc (Center: 280, 155, R: 96) -->
+              <g id="moonDiscGroup" transform="translate(280, 155)">
+                <!-- 3D Raycast Spherical Moon inside SVG coordinate space -->
+                <foreignObject id="moon3dForeignObj" x="-110" y="-110" width="220" height="220" style="display: none;">
+                  <canvas xmlns="http://www.w3.org/1999/xhtml" id="moon3dCanvas" width="220" height="220"></canvas>
+                </foreignObject>
+
+                <!-- 2D Moon Layers -->
+                <g id="viewBMoon2DLayers">
+                  <circle cx="0" cy="0" r="96" fill="#111827" stroke="#1e293b" stroke-width="2" />
+                  <g fill="#1e293b" opacity="0.55">
+                    <circle cx="-28" cy="-22" r="22" />
+                    <circle cx="10" cy="-32" r="16" />
+                    <circle cx="-15" cy="18" r="26" />
+                    <circle cx="28" cy="12" r="18" />
+                    <circle cx="-48" cy="10" r="14" />
+                  </g>
+                  <path id="moonPhasePath" d="" fill="#facc15" />
+                  <clipPath id="litClip">
+                    <path id="moonClipPath" d="" />
+                  </clipPath>
+                  <g clip-path="url(#litClip)" fill="#eab308" opacity="0.35">
+                    <circle cx="-28" cy="-22" r="22" />
+                    <circle cx="10" cy="-32" r="16" />
+                    <circle cx="-15" cy="18" r="26" />
+                    <circle cx="28" cy="12" r="18" />
+                    <circle cx="-48" cy="10" r="14" />
+                  </g>
+                </g>
+
+                <!-- D / C Cyan Dashed Helper Overlay -->
+                <path
+                  id="dcArcPath"
+                  d="M 0 -100 L 0 100 A 100 100 0 0 0 0 -100"
+                  fill="none"
+                  stroke="#38bdf8"
+                  stroke-width="3.2"
+                  stroke-dasharray="6,5"
+                />
+              </g>
+
+              <!-- D/C Helper Caption Below Moon -->
+              <text id="dcCaptionText" x="280" y="280" fill="#38bdf8" font-size="14" font-weight="800" text-anchor="middle">
+                🌑 初一新月：月球暗面朝向地球
+              </text>
+
+              <!-- Bottom Horizon Orientation Caption -->
+              <text x="280" y="312" fill="#94a3b8" font-size="12" font-weight="600" text-anchor="middle">
+                東(左) ◀ 面向南方夜空仰望（同步自轉：永遠同一面朝地球） ▶ 西(右)
+              </text>
+            </svg>
+          </div>
+        </section>
+      </div>
+
+      <!-- Lower Row / Standalone: View C (Moon Sky Track) -->
+      <div class="views-bottom-row" id="viewsBottomRow" style="display: none;">
+        <section class="view-card" id="cardViewC">
+          <div class="view-header">
+            <div class="view-title-c">
+              🌌 視角 C：月亮出現天空的時間與位置（仰角軌跡圖）
+            </div>
+            <div class="view-sub-c">
+              <div class="view-c-toolbar">
+                <button class="btn-taiwan-info" id="btnOpenTaiwanInfo">📍 觀測地點解析 (台灣)</button>
+                <button class="chip-toggle-btn active" id="btnToggleNightOnly">🌙 僅夜晚可見時段</button>
+                <div class="view-c-slider-box">
+                  <span>⌚ 觀測時刻:</span>
+                  <input type="range" class="view-c-time-slider" id="obsHourSlider" min="0" max="24" step="0.5" value="20" />
+                  <strong id="obsHourText" style="color: #fde047; min-width: 44px;">20:00</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="canvas-box canvas-box-c">
+            <svg id="skySvg" viewBox="0 0 1140 290" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#050917" />
+                  <stop offset="70%" stop-color="#0b172f" />
+                  <stop offset="100%" stop-color="#152649" />
+                </linearGradient>
+              </defs>
+
+              <rect x="0" y="0" width="1140" height="290" fill="url(#skyGrad)" />
+
+              <!-- Altitude Grid Lines (0° to 90°, every 10°) -->
+              <g stroke="#1e2c47" stroke-width="1" stroke-dasharray="3,3">
+                <line x1="60" y1="245" x2="1100" y2="245" stroke="#33476e" stroke-width="1.5" stroke-dasharray="none" />
+                <line x1="60" y1="222" x2="1100" y2="222" />
+                <line x1="60" y1="198" x2="1100" y2="198" />
+                <line x1="60" y1="175" x2="1100" y2="175" />
+                <line x1="60" y1="152" x2="1100" y2="152" />
+                <line x1="60" y1="128" x2="1100" y2="128" />
+                <line x1="60" y1="105" x2="1100" y2="105" />
+                <line x1="60" y1="82" x2="1100" y2="82" />
+                <line x1="60" y1="58" x2="1100" y2="58" />
+                <line x1="60" y1="35" x2="1100" y2="35" stroke="#38bdf8" stroke-dasharray="4,3" opacity="0.6" />
+              </g>
+
+              <!-- Altitude Left Labels -->
+              <g fill="#94a3b8" font-size="11.5" font-weight="700" text-anchor="end">
+                <text x="48" y="249">0°</text>
+                <text x="48" y="226">10°</text>
+                <text x="48" y="202">20°</text>
+                <text x="48" y="179">30°</text>
+                <text x="48" y="156">40°</text>
+                <text x="48" y="132">50°</text>
+                <text x="48" y="109">60°</text>
+                <text x="48" y="86">70°</text>
+                <text x="48" y="62">80°</text>
+                <text x="48" y="39" fill="#38bdf8">90°</text>
+              </g>
+
+              <!-- Southern Meridian Center Dashed Line (X: 580) -->
+              <line x1="580" y1="25" x2="580" y2="245" stroke="#38bdf8" stroke-width="1.4" stroke-dasharray="5,4" opacity="0.75" />
+
+              <!-- Landscape / Campus Silhouette at Bottom Horizon (0° - 18°) -->
+              <g fill="#070c18" opacity="0.95">
+                <rect x="60" y="180" width="34" height="65" rx="2" />
+                <rect x="70" y="170" width="14" height="10" />
+                <path d="M 94 245 C 110 220, 130 215, 150 245 Z" />
+                <path d="M 140 245 C 170 205, 205 210, 235 245 Z" />
+                <path d="M 220 245 C 245 215, 275 220, 305 245 Z" />
+                <path d="M 470 245 C 475 190, 485 185, 490 245 Z" />
+                <rect x="520" y="222" width="45" height="23" />
+                <path d="M 515 222 L 542 205 L 570 222 Z" />
+                <path d="M 575 245 C 600 200, 640 205, 665 245 Z" />
+                <rect x="680" y="228" width="35" height="17" />
+                <path d="M 830 245 C 870 195, 930 200, 965 245 Z" />
+                <path d="M 950 245 C 990 208, 1040 215, 1085 245 Z" />
+              </g>
+
+              <!-- Compass Base Labels -->
+              <g fill="#e2e8f0" font-size="13" font-weight="800">
+                <text x="80" y="272" text-anchor="start">東方 (月升方向)</text>
+                <text x="580" y="272" text-anchor="middle" fill="#38bdf8">南方 (正中天最高點)</text>
+                <text x="1080" y="272" text-anchor="end">西方 (月落方向)</text>
+              </g>
+
+              <!-- Dynamic Moon Orbit Arc in Sky -->
+              <path id="skyOrbitCurve" d="" fill="none" stroke="#ca8a04" stroke-width="1.8" stroke-dasharray="4,4" opacity="0.6" />
+
+              <!-- Container for Hourly Moon Markers -->
+              <g id="skyMarkersContainer"></g>
+
+              <!-- Currently Selected Observation Moon Pointer & Halo -->
+              <g id="currentObsMarker" style="display: none;">
+                <circle id="obsMarkerHalo" cx="0" cy="0" r="22" fill="none" stroke="#facc15" stroke-width="2" stroke-dasharray="4,3" />
+                <line id="obsAltitudeLine" x1="0" y1="0" x2="0" y2="245" stroke="#facc15" stroke-width="1.2" stroke-dasharray="3,3" opacity="0.6" />
+                <text id="obsMarkerLabel" x="0" y="-26" fill="#fde047" font-size="12" font-weight="800" text-anchor="middle"></text>
+              </g>
+            </svg>
+          </div>
+        </section>
+      </div>
     </main>
 
     <!-- Middle Info Status Bar (Enhanced with Junior High Earth Science Indicators) -->
@@ -1161,6 +1373,55 @@
         <button class="btn-preset" data-day="27">廿七 殘月(左細)</button>
       </div>
     </section>
+  </div>
+
+  <!-- Modal: Taiwan Observation & Elevation Explanation (New in v1.5) -->
+  <div class="modal-backdrop" id="taiwanInfoModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">📍 視角 C：台灣夜空觀測地理與仰角幾何解析</div>
+        <button class="modal-close" data-close="taiwanInfoModal">✕</button>
+      </div>
+
+      <div class="point-box">
+        <div class="point-title">1️⃣ 為什麼觀測月亮一定要「面向南方夜空」？</div>
+        <div class="point-desc">
+          • <strong>地理緯度</strong>：台灣位於北半球，北回歸線（約<strong>北緯 23.5°</strong>）橫貫中南部。<br />
+          • <strong>天球軌跡</strong>：月球的公轉軌道（白道面）靠近天球赤道與黃道，因此在台灣看月球運行，永遠呈現「<strong>東方升起 ➔ 偏向南方天空達最高點 ➔ 西方落下</strong>」的弧形軌跡。<br />
+          • <strong>人體方位對應</strong>：
+            當我們<strong>面向正南方夜空仰望</strong>時，左手邊剛好是<strong>東方（月升處）</strong>、正前方高空是<strong>南方中天（最高點）</strong>、右手邊是<strong>西方（月落處）</strong>。<br />
+          <em style="color: #94a3b8; font-size: 0.85rem;">（※ 小知識：若是在南半球如澳洲雪梨觀測，觀測者就必須面向「北方」看月亮囉！）</em>
+        </div>
+      </div>
+
+      <div class="point-box">
+        <div class="point-title">2️⃣ 為什麼正南方中天的最高仰角落在「約 60° ～ 62°」？</div>
+        <div class="point-desc">
+          • <strong>天文仰角公式</strong>：<span class="formula-tag">中天仰角 ≈ 90° - 觀測者緯度 + 天體赤緯</span><br />
+          • <strong>代入台灣數據計算</strong>：<br />
+            台灣平均緯度約 <strong>23.5°N</strong>，當月球運行到赤道天區（赤緯約 0°）時：<br />
+            <span class="formula-tag">90° - 23.5° = 66.5°</span><br />
+            考量月球軌道傾角（白赤交角約 ±5° 的微調）與台灣各縣市緯度差異，月球在台灣過中天時的仰角範圍大約落在 <strong>60° ～ 66°</strong> 之間！<br />
+            這正是紀錄附圖中 <strong>23:00 與 24:00 高度角剛好落在 60° 橫線</strong>的真實天文科學依據！
+        </div>
+      </div>
+
+      <div class="point-box">
+        <div class="point-title">3️⃣ 附圖中的手寫紀錄（20:00 ～ 04:00）是農曆哪一天？</div>
+        <div class="point-desc">
+          • <strong>時間與仰角軌跡推算</strong>：<br />
+            - <strong>20:00</strong>：剛自東方地平升起不久，仰角約 32°<br />
+            - <strong>23:00 ～ 24:00</strong>：到達正南方中天最高點（仰角約 60°）<br />
+            - <strong>04:00</strong>：已西行至西方低空（仰角約 20°）<br />
+          • <strong>判定結果</strong>：整條軌跡代表月亮在傍晚約 <strong>18:00 東升</strong>、半夜 <strong>24:00 中天</strong>、清晨 <strong>06:00 西落</strong>，整夜可見。<br />
+            這正是標準的 <strong>農曆十五（滿月 / 望）</strong> 當晚的真實觀測紀錄！
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 4px;">
+        <button class="btn-top btn-quiz" id="btnApplyFullMoonDemo">🎯 一鍵切換至十五滿月對照驗證</button>
+      </div>
+    </div>
   </div>
 
   <!-- Modal 0: Junior High Earth Science Knowledge Base -->
@@ -1281,7 +1542,7 @@
     </div>
   </div>
 
-  <!-- Modal 2: Interactive Classroom Quiz (Junior High Earth Science Edition) -->
+  <!-- Modal 2: Interactive Classroom Quiz -->
   <div class="modal-backdrop" id="quizModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1314,7 +1575,7 @@
       "廿六", "廿七", "廿八", "廿九", "三十"
     ];
 
-    // State: Initial screen starts at Day 1 (初一)
+    // State
     let currentDay = 1.0;
     let is3DMode = false;
     let is3DTilted = true;
@@ -1325,13 +1586,31 @@
     let animFrameId = null;
     let lastTimestamp = 0;
 
+    // View Visibility State (Default: A & B on, C off)
+    let visibleViews = { A: true, B: true, C: false };
+    let nightOnlyViewC = true;
+    let selectedObsHour = 20.0;
+
     // DOM Elements
+    const viewsTopRow = document.getElementById("viewsTopRow");
+    const viewsBottomRow = document.getElementById("viewsBottomRow");
+    const cardViewA = document.getElementById("cardViewA");
+    const cardViewB = document.getElementById("cardViewB");
+    const cardViewC = document.getElementById("cardViewC");
+
+    const btnPresetAB = document.getElementById("btnPresetAB");
+    const btnPresetAC = document.getElementById("btnPresetAC");
+    const btnPresetABC = document.getElementById("btnPresetABC");
+    const btnToggleViewA = document.getElementById("btnToggleViewA");
+    const btnToggleViewB = document.getElementById("btnToggleViewB");
+    const btnToggleViewC = document.getElementById("btnToggleViewC");
+
     const spaceSvg = document.getElementById("spaceSvg");
     const sceneLayerRoot = document.getElementById("sceneLayerRoot");
     const earthGroup = document.getElementById("earthGroup");
     const orbitMoonGroup = document.getElementById("orbitMoonGroup");
     const sightLine = document.getElementById("sightLine");
-    const observerDot = document.getElementById("observerDot");
+    const observerHorizonGroup = document.getElementById("observerHorizonGroup");
     const orbitRing = document.getElementById("orbitRing");
     const labelDay8 = document.getElementById("labelDay8");
     const labelDay23 = document.getElementById("labelDay23");
@@ -1381,14 +1660,28 @@
     const btnNextDay = document.getElementById("btnNextDay");
     const presetButtons = document.querySelectorAll(".btn-preset");
 
-    // Orbit Geometry (View A)
+    // View C elements
+    const skyOrbitCurve = document.getElementById("skyOrbitCurve");
+    const skyMarkersContainer = document.getElementById("skyMarkersContainer");
+    const currentObsMarker = document.getElementById("currentObsMarker");
+    const obsMarkerHalo = document.getElementById("obsMarkerHalo");
+    const obsAltitudeLine = document.getElementById("obsAltitudeLine");
+    const obsMarkerLabel = document.getElementById("obsMarkerLabel");
+    const obsHourSlider = document.getElementById("obsHourSlider");
+    const obsHourText = document.getElementById("obsHourText");
+    const btnToggleNightOnly = document.getElementById("btnToggleNightOnly");
+    const btnOpenTaiwanInfo = document.getElementById("btnOpenTaiwanInfo");
+    const taiwanInfoModal = document.getElementById("taiwanInfoModal");
+    const btnApplyFullMoonDemo = document.getElementById("btnApplyFullMoonDemo");
+
+    // Geometry View A
     const EARTH_CX = 250;
     const EARTH_CY = 165;
     const ORBIT_RX = 105;
     const EARTH_R = 28;
     const MOON_VIEW_B_R = 96;
 
-    // Precompute 3D Moon surface normal & albedo map for View B 3D Canvas
+    // Precompute 3D Moon for View B
     const M3D_SIZE = 220;
     const M3D_R = 96;
     const moon3dCtx = moon3dCanvas.getContext("2d");
@@ -1471,10 +1764,7 @@
 
           pixels.push({
             idx: (py * size + px) * 4,
-            nx,
-            ny,
-            nz,
-            nz0,
+            nx, ny, nz, nz0,
             albedo: Math.max(0.55, Math.min(1.08, albedo)),
             alpha
           });
@@ -1561,9 +1851,7 @@
 
     function buildMoonPhasePath(theta, R) {
       const illumFraction = (1 - Math.cos(theta)) / 2;
-      if (illumFraction < 0.008) {
-        return "";
-      }
+      if (illumFraction < 0.008) return "";
       if (illumFraction > 0.992) {
         return `M 0 ${-R} A ${R} ${R} 0 1 1 0 ${R} A ${R} ${R} 0 1 1 0 ${-R} Z`;
       }
@@ -1580,7 +1868,6 @@
       }
     }
 
-    // Format minutes from 00:00 as HH:MM
     function formatTimeFromMinutes(totalMins) {
       const norm = ((Math.round(totalMins) % 1440) + 1440) % 1440;
       const hh = String(Math.floor(norm / 60)).padStart(2, "0");
@@ -1589,15 +1876,12 @@
     }
 
     function getPhaseMetadata(dayInt, pct, theta) {
-      // Calculate Moonrise / Transit (Meridian) / Moonset based on ~50 mins delay per lunar day
-      // At Day 1 (0 rad): Rise 06:00 (360m), Transit 12:00 (720m), Set 18:00 (1080m)
       const delayMins = (theta / (2 * Math.PI)) * 1440;
       const riseStr = formatTimeFromMinutes(360 + delayMins);
       const transitStr = formatTimeFromMinutes(720 + delayMins);
       const setStr = formatTimeFromMinutes(1080 + delayMins);
       const riseSetSummary = `${riseStr}升 / ${transitStr}中天 / ${setStr}落`;
 
-      // Tide & Eclipse science text
       let tideSummary = "中潮 (潮差適中)";
       let eclipseSummary = "無交食 (日地月未連成一線)";
 
@@ -1623,9 +1907,7 @@
           obsTime: "☀️ 與太陽同升同落，夜晚看不見",
           dcType: "none",
           dcCaption: "🌑 初一新月：月球暗面朝向地球",
-          riseSetSummary,
-          tideSummary,
-          eclipseSummary
+          riseSetSummary, tideSummary, eclipseSummary
         };
       } else if (dayInt >= 2 && dayInt <= 6) {
         return {
@@ -1635,9 +1917,7 @@
           obsTime: "🕓 傍晚日落後見於西方天空",
           dcType: "D",
           dcCaption: "👍 右亮像 D (上弦方向・上西天)",
-          riseSetSummary,
-          tideSummary,
-          eclipseSummary
+          riseSetSummary, tideSummary, eclipseSummary
         };
       } else if (dayInt >= 7 && dayInt <= 9) {
         return {
@@ -1647,9 +1927,7 @@
           obsTime: "🕕 中午東升、傍晚中天(南方)、子夜西落",
           dcType: "D",
           dcCaption: "👍 右亮像 D (上弦月：黃昏在南方至西方)",
-          riseSetSummary,
-          tideSummary,
-          eclipseSummary
+          riseSetSummary, tideSummary, eclipseSummary
         };
       } else if (dayInt >= 10 && dayInt <= 14) {
         return {
@@ -1659,9 +1937,7 @@
           obsTime: "🕖 下午東升，傍晚至大半夜可見",
           dcType: "D",
           dcCaption: "👍 右亮像 D (越來越圓邁向滿月)",
-          riseSetSummary,
-          tideSummary,
-          eclipseSummary
+          riseSetSummary, tideSummary, eclipseSummary
         };
       } else if (dayInt >= 15 && dayInt <= 16) {
         return {
@@ -1671,9 +1947,7 @@
           obsTime: "🌕 傍晚18:00東升、子夜中天、清晨西落",
           dcType: "O",
           dcCaption: "🌕 十五滿月：整夜可見 (傍晚東升・子夜中天)",
-          riseSetSummary,
-          tideSummary,
-          eclipseSummary
+          riseSetSummary, tideSummary, eclipseSummary
         };
       } else if (dayInt >= 17 && dayInt <= 21) {
         return {
@@ -1683,9 +1957,7 @@
           obsTime: "🕘 晚上東升，下半夜至清晨可見",
           dcType: "C",
           dcCaption: "👍 左亮像 C (下弦方向・下東邊)",
-          riseSetSummary,
-          tideSummary,
-          eclipseSummary
+          riseSetSummary, tideSummary, eclipseSummary
         };
       } else if (dayInt >= 22 && dayInt <= 24) {
         return {
@@ -1695,9 +1967,7 @@
           obsTime: "🕛 子夜東升、清晨中天(南方)、中午西落",
           dcType: "C",
           dcCaption: "👍 左亮像 C (下弦月：清晨在東方至南方)",
-          riseSetSummary,
-          tideSummary,
-          eclipseSummary
+          riseSetSummary, tideSummary, eclipseSummary
         };
       } else {
         return {
@@ -1707,11 +1977,179 @@
           obsTime: "🕓 清晨日出前見於東方低空",
           dcType: "C",
           dcCaption: "👍 左亮像 C (下弦方向・下東邊)",
-          riseSetSummary,
-          tideSummary,
-          eclipseSummary
+          riseSetSummary, tideSummary, eclipseSummary
         };
       }
+    }
+
+    // Perspective Views Layout & Toggles
+    function applyViewVisibility() {
+      cardViewA.style.display = visibleViews.A ? "flex" : "none";
+      cardViewB.style.display = visibleViews.B ? "flex" : "none";
+      viewsBottomRow.style.display = visibleViews.C ? "block" : "none";
+
+      const topVisibleCount = (visibleViews.A ? 1 : 0) + (visibleViews.B ? 1 : 0);
+      viewsTopRow.style.display = topVisibleCount > 0 ? "grid" : "none";
+      viewsTopRow.classList.toggle("single-col", topVisibleCount === 1);
+
+      btnToggleViewA.classList.toggle("active", visibleViews.A);
+      btnToggleViewB.classList.toggle("active", visibleViews.B);
+      btnToggleViewC.classList.toggle("active", visibleViews.C);
+
+      btnPresetAB.classList.toggle("active", visibleViews.A && visibleViews.B && !visibleViews.C);
+      btnPresetAC.classList.toggle("active", visibleViews.A && !visibleViews.B && visibleViews.C);
+      btnPresetABC.classList.toggle("active", visibleViews.A && visibleViews.B && visibleViews.C);
+
+      updateSimulation();
+    }
+
+    btnPresetAB.addEventListener("click", () => {
+      visibleViews = { A: true, B: true, C: false };
+      applyViewVisibility();
+    });
+
+    btnPresetAC.addEventListener("click", () => {
+      visibleViews = { A: true, B: false, C: true };
+      applyViewVisibility();
+    });
+
+    btnPresetABC.addEventListener("click", () => {
+      visibleViews = { A: true, B: true, C: true };
+      applyViewVisibility();
+    });
+
+    btnToggleViewA.addEventListener("click", () => {
+      visibleViews.A = !visibleViews.A;
+      if (!visibleViews.A && !visibleViews.B && !visibleViews.C) visibleViews.A = true;
+      applyViewVisibility();
+    });
+
+    btnToggleViewB.addEventListener("click", () => {
+      visibleViews.B = !visibleViews.B;
+      if (!visibleViews.A && !visibleViews.B && !visibleViews.C) visibleViews.B = true;
+      applyViewVisibility();
+    });
+
+    btnToggleViewC.addEventListener("click", () => {
+      visibleViews.C = !visibleViews.C;
+      if (!visibleViews.A && !visibleViews.B && !visibleViews.C) visibleViews.C = true;
+      applyViewVisibility();
+    });
+
+    function getMoonSkyPosition(hour, theta) {
+      const delayHours = (theta / (2 * Math.PI)) * 24;
+      const transitHour = (12 + delayHours) % 24;
+      
+      let diff = hour - transitHour;
+      while (diff > 12) diff -= 24;
+      while (diff < -12) diff += 24;
+
+      const isAboveHorizon = Math.abs(diff) <= 6.0;
+      const x = 580 + (diff / 6) * 500;
+
+      let altDeg = 0;
+      if (isAboveHorizon) {
+        altDeg = 62 * Math.cos((diff * Math.PI) / 12);
+      } else {
+        altDeg = -10;
+      }
+
+      const y = 245 - (altDeg / 90) * 210;
+      return { x, y, altDeg, isAboveHorizon, diff };
+    }
+
+    function renderViewCSky(theta) {
+      if (!visibleViews.C) return;
+
+      const transitY = 245 - (62 / 90) * 210;
+      skyOrbitCurve.setAttribute("d", `M 80 245 Q 580 ${transitY - 45} 1080 245`);
+
+      skyMarkersContainer.innerHTML = "";
+
+      let hoursToPlot = [];
+      if (nightOnlyViewC) {
+        hoursToPlot = [18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5, 6];
+      } else {
+        for (let h = 0; h <= 24; h++) hoursToPlot.push(h);
+      }
+
+      const miniPath = buildMoonPhasePath(theta, 9);
+
+      hoursToPlot.forEach((hr) => {
+        const pos = getMoonSkyPosition(hr % 24, theta);
+        if (!pos.isAboveHorizon) return;
+
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("class", "sky-moon-point");
+        g.setAttribute("transform", `translate(${pos.x.toFixed(1)}, ${pos.y.toFixed(1)})`);
+
+        const hit = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        hit.setAttribute("r", "18");
+        hit.setAttribute("fill", "transparent");
+        g.appendChild(hit);
+
+        const darkBase = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        darkBase.setAttribute("r", "9");
+        darkBase.setAttribute("fill", "#1e293b");
+        darkBase.setAttribute("stroke", "#334155");
+        darkBase.setAttribute("stroke-width", "1");
+        g.appendChild(darkBase);
+
+        if (miniPath) {
+          const litP = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          litP.setAttribute("d", miniPath);
+          litP.setAttribute("fill", "#facc15");
+          g.appendChild(litP);
+        }
+
+        const txtTime = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txtTime.setAttribute("x", "0");
+        txtTime.setAttribute("y", "-13");
+        txtTime.setAttribute("fill", "#f8fafc");
+        txtTime.setAttribute("font-size", "11.5");
+        txtTime.setAttribute("font-weight", "800");
+        txtTime.setAttribute("text-anchor", "middle");
+        const displayHr = hr === 24 ? "24:00" : `${String(hr).padStart(2, "0")}:00`;
+        txtTime.textContent = displayHr;
+        g.appendChild(txtTime);
+
+        const txtAlt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txtAlt.setAttribute("x", "0");
+        txtAlt.setAttribute("y", "21");
+        txtAlt.setAttribute("fill", "#94a3b8");
+        txtAlt.setAttribute("font-size", "10.5");
+        txtAlt.setAttribute("font-weight", "700");
+        txtAlt.setAttribute("text-anchor", "middle");
+        txtAlt.textContent = `${Math.round(pos.altDeg)}°`;
+        g.appendChild(txtAlt);
+
+        g.addEventListener("click", () => {
+          selectedObsHour = hr % 24;
+          obsHourSlider.value = selectedObsHour;
+          updateSimulation();
+        });
+
+        skyMarkersContainer.appendChild(g);
+      });
+
+      const curPos = getMoonSkyPosition(selectedObsHour, theta);
+      if (curPos.isAboveHorizon) {
+        currentObsMarker.style.display = "block";
+        currentObsMarker.setAttribute("transform", `translate(${curPos.x.toFixed(1)}, ${curPos.y.toFixed(1)})`);
+        obsAltitudeLine.setAttribute("y2", (245 - curPos.y).toFixed(1));
+        
+        let dirDesc = "南方中天";
+        if (curPos.diff < -0.5) dirDesc = "東偏南";
+        if (curPos.diff > 0.5) dirDesc = "西偏南";
+        if (curPos.diff <= -5) dirDesc = "東方地平";
+        if (curPos.diff >= 5) dirDesc = "西方地平";
+
+        obsMarkerLabel.textContent = `📍 ${formatTimeFromMinutes(selectedObsHour * 60)} (${dirDesc} 仰角 ${Math.round(curPos.altDeg)}°)`;
+      } else {
+        currentObsMarker.style.display = "none";
+      }
+
+      obsHourText.textContent = formatTimeFromMinutes(selectedObsHour * 60);
     }
 
     function updateModeUI() {
@@ -1751,7 +2189,7 @@
       labelDay8.setAttribute("y", useOblique ? "92" : "44");
       labelDay23.setAttribute("y", useOblique ? "246" : "294");
 
-      // 1. Update View A (Space Top-Down / 3D Oblique)
+      // 1. Update View A
       const moonX = EARTH_CX + ORBIT_RX * Math.cos(theta);
       const moonY = EARTH_CY - orbitRY * Math.sin(theta);
 
@@ -1774,13 +2212,15 @@
       sightLine.setAttribute("x2", moonX.toFixed(1));
       sightLine.setAttribute("y2", moonY.toFixed(1));
 
-      // Update Tidal Bulge Orientation & Amplitude (Spring Tide vs Neap Tide)
+      // Earth Observer Rotation synchronized with selectedObsHour
+      const earthRotDeg = ((selectedObsHour - 12) / 24) * 360;
+      observerHorizonGroup.setAttribute("transform", `rotate(${earthRotDeg.toFixed(1)})`);
+
+      // Update Tidal Bulge
       tidalBulgeGroup.style.display = showTideBulge ? "block" : "none";
       if (showTideBulge) {
         const deg = (-theta * 180) / Math.PI;
-        // Spring tide at theta=0 or PI (cos(2*theta) = 1) -> bulge rx=46, ry=30
-        // Neap tide at theta=PI/2 or 3PI/2 (cos(2*theta) = -1) -> bulge rx=37, ry=32
-        const springFactor = Math.cos(2 * theta); // +1 at Spring, -1 at Neap
+        const springFactor = Math.cos(2 * theta);
         const bulgeRx = 41.5 + 4.5 * springFactor;
         const bulgeRy = 31.0 - 1.5 * springFactor;
         lunarTideEllipse.setAttribute("rx", bulgeRx.toFixed(1));
@@ -1799,17 +2239,11 @@
         moonUmbraPoly.setAttribute("points", `${p1} ${p2} ${p3}`);
       }
 
-      const obsRY = useOblique ? EARTH_R * 0.65 : EARTH_R - 1;
-      const obsX = EARTH_CX + (EARTH_R - 1) * Math.cos(theta);
-      const obsY = EARTH_CY - obsRY * Math.sin(theta);
-      observerDot.setAttribute("cx", obsX.toFixed(1));
-      observerDot.setAttribute("cy", obsY.toFixed(1));
-
-      // 2. Calculate illumination percentage
+      // 2. Illumination percentage
       const illumFraction = (1 - Math.cos(theta)) / 2;
       const pct = Math.round(illumFraction * 100);
 
-      // 3. Update View B (Earth Looking Up)
+      // 3. Update View B
       litPercentTop.textContent = `亮面 ${pct}%`;
       if (is3DMode) {
         render3DMoonViewB(theta);
@@ -1819,7 +2253,10 @@
         moonClipPath.setAttribute("d", pathStr);
       }
 
-      // 4. Metadata & Junior High Science Strip
+      // 4. Update View C
+      renderViewCSky(theta);
+
+      // 5. Metadata & Science Strip
       const meta = getPhaseMetadata(dayInt, pct, theta);
       const dayName = LUNAR_DAY_NAMES[dayInt] || "初一";
       lunarDayBadge.textContent = `農曆 ${dayName} (${pct}%亮)`;
@@ -1855,17 +2292,45 @@
         }
       }
 
-      // 5. Update Slider & Fill Track
+      // 6. Slider
       lunarSlider.value = currentDay;
       const sliderPct = ((currentDay - 1) / 29) * 100;
       lunarSlider.style.background = `linear-gradient(90deg, #ca8a04 0%, #facc15 ${sliderPct}%, #1e293b ${sliderPct}%, #1e293b 100%)`;
 
-      // 6. Highlight Active Preset Button
+      // 7. Preset buttons
       presetButtons.forEach((btn) => {
         const presetDay = parseInt(btn.dataset.day, 10);
         btn.classList.toggle("active", dayInt === presetDay);
       });
     }
+
+    // View C Controls
+    obsHourSlider.addEventListener("input", (e) => {
+      selectedObsHour = parseFloat(e.target.value);
+      updateSimulation();
+    });
+
+    btnToggleNightOnly.addEventListener("click", () => {
+      nightOnlyViewC = !nightOnlyViewC;
+      btnToggleNightOnly.textContent = nightOnlyViewC ? "🌙 僅夜晚可見時段" : "🕒 顯示全天軌跡";
+      btnToggleNightOnly.classList.toggle("active", nightOnlyViewC);
+      updateSimulation();
+    });
+
+    // Taiwan Info Modal Open / Close
+    btnOpenTaiwanInfo.addEventListener("click", () => {
+      taiwanInfoModal.classList.add("open");
+    });
+
+    btnApplyFullMoonDemo.addEventListener("click", () => {
+      taiwanInfoModal.classList.remove("open");
+      // Set to Day 15 (Full Moon), hour 20:00, ensure View C is visible
+      currentDay = 15.0;
+      selectedObsHour = 20.0;
+      obsHourSlider.value = 20;
+      visibleViews.C = true;
+      applyViewVisibility();
+    });
 
     // 2D / 3D Mode Switch Events
     btnMode2D.addEventListener("click", () => {
@@ -1911,7 +2376,7 @@
     function handlePointerMoveOnOrbit(clientX, clientY) {
       const rect = spaceSvg.getBoundingClientRect();
       const scaleX = 560 / rect.width;
-      const scaleY = 340 / rect.height;
+      const scaleY = 330 / rect.height;
       const svgX = (clientX - rect.left) * scaleX;
       const svgY = (clientY - rect.top) * scaleY;
 
@@ -2040,7 +2505,7 @@
       });
     });
 
-    // Quiz Engine (Upgraded with Junior High School Earth Science Questions)
+    // Quiz Engine
     const QUIZ_QUESTIONS = [
       {
         q: "1. 【每日延後50分鐘】若今天農曆十五滿月在傍晚 18:00 從東方升起，請問明天（農曆十六）月亮大約會在幾點升起？",
@@ -2178,9 +2643,9 @@
       }
     });
 
-    // Initial render at Day 1 (初一)
+    // Initial Setup
     updateModeUI();
-    updateSimulation();
+    applyViewVisibility();
   </script>
 </body>
 </html>
